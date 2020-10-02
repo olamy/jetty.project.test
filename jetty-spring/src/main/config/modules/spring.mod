@@ -1,8 +1,8 @@
 # DO NOT EDIT - See: https://www.eclipse.org/jetty/documentation/current/startup-modules.html
 
 [description]
-Enable spring configuration processing of jetty XML files.
-All jetty style xml files can optionally be written as spring beans
+Enables Spring configuration processing of Jetty XML files.
+All Jetty-style XML files can optionally be written as Spring beans.2
 
 [depend]
 server
@@ -11,6 +11,6 @@ server
 lib/spring/*.jar
 
 [ini-template]
-## See http://www.eclipse.org/jetty/documentation/current/frameworks.html#framework-jetty-spring
+## See https://eclipse.org/jetty/documentation/current/frameworks.html#framework-jetty-spring
 ## for information on how to complete spring configuration
 

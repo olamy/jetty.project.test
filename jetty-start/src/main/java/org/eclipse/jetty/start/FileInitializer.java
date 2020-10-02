@@ -20,13 +20,13 @@ package org.eclipse.jetty.start;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLConnection;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -132,34 +132,25 @@ public abstract class FileInitializer
 
         StartLog.info("download %s to %s", uri, _basehome.toShortForm(destination));
 
-        HttpURLConnection http = (HttpURLConnection)uri.toURL().openConnection();
-        http.setInstanceFollowRedirects(true);
-        http.setAllowUserInteraction(false);
+        URLConnection connection = uri.toURL().openConnection();
 
-        int status = http.getResponseCode();
-
-        if (status != HttpURLConnection.HTTP_OK)
+        if (connection instanceof HttpURLConnection)
         {
-            throw new IOException("URL GET Failure [" + status + "/" + http.getResponseMessage() + "] on " + uri);
+            HttpURLConnection http = (HttpURLConnection)uri.toURL().openConnection();
+            http.setInstanceFollowRedirects(true);
+            http.setAllowUserInteraction(false);
+
+            int status = http.getResponseCode();
+
+            if (status != HttpURLConnection.HTTP_OK)
+            {
+                throw new IOException("URL GET Failure [" + status + "/" + http.getResponseMessage() + "] on " + uri);
+            }
         }
 
-        byte[] buf = new byte[8192];
-        try (InputStream in = http.getInputStream();
-             OutputStream out = Files.newOutputStream(destination, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE))
+        try (InputStream in = connection.getInputStream())
         {
-            while (true)
-            {
-                int len = in.read(buf);
-
-                if (len > 0)
-                {
-                    out.write(buf, 0, len);
-                }
-                if (len < 0)
-                {
-                    break;
-                }
-            }
+            Files.copy(in, destination, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 

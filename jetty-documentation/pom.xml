@@ -87,6 +87,11 @@
       <artifactId>jetty-memcached-sessions</artifactId>
       <version>${project.version}</version>
 	</dependency>
+	<dependency>
+	  <groupId>org.eclipse.jetty</groupId>
+	  <artifactId>jetty-nosql</artifactId>
+	  <version>${project.version}</version>
+	</dependency>
   </dependencies>
 
   <build>
@@ -123,6 +128,18 @@
         </configuration>
         <executions>
           <execution>
+            <id>index</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>src/main/asciidoc</sourceDirectory>
+              <sourceDocumentName>index.adoc</sourceDocumentName>
+              <outputDirectory>${project.build.directory}/html</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
             <id>operations-guide</id>
             <phase>generate-resources</phase>
             <goals>
@@ -156,6 +173,18 @@
               <sourceDirectory>${basedir}/src/main/asciidoc/programming-guide</sourceDirectory>
               <sourceDocumentName>index.adoc</sourceDocumentName>
               <outputDirectory>${project.build.directory}/html/programming-guide</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>old_docs</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${basedir}/src/main/asciidoc/old_docs</sourceDirectory>
+              <sourceDocumentName>index.adoc</sourceDocumentName>
+              <outputDirectory>${project.build.directory}/html/old_docs</outputDirectory>
             </configuration>
           </execution>
         </executions>

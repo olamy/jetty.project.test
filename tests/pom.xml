@@ -10,7 +10,6 @@
   <groupId>org.eclipse.jetty.tests</groupId>
   <artifactId>tests-parent</artifactId>
   <name>Jetty Tests :: Parent</name>
-  <url>http://www.eclipse.org/jetty</url>
   <packaging>pom</packaging>
   <build>
     <pluginManagement>
@@ -69,5 +68,6 @@
     <module>test-jmx</module>
     <module>test-http-client-transport</module>
     <module>test-distribution</module>
+    <module>test-cdi</module>
   </modules>
 </project>

@@ -316,7 +316,7 @@ public class Request implements HttpServletRequest
 
         HttpField authField = getHttpFields().getField(HttpHeader.AUTHORIZATION);
         //TODO check what to do for digest etc etc
-        if (getUserPrincipal() != null && authField.getValue().startsWith("Basic"))
+        if (authField != null && getUserPrincipal() != null && authField.getValue().startsWith("Basic"))
             fields.add(authField);
 
         String id;
@@ -1355,11 +1355,7 @@ public class Request implements HttpServletRequest
 
         // If no port specified, return the default port for the scheme
         if (port <= 0)
-        {
-            if (getScheme().equalsIgnoreCase(URIUtil.HTTPS))
-                return 443;
-            return 80;
-        }
+            return HttpScheme.getDefaultPort(getScheme());
 
         // return a specific port
         return port;
@@ -1516,6 +1512,9 @@ public class Request implements HttpServletRequest
             throw new IllegalStateException("No SessionManager");
 
         _session = _sessionHandler.newHttpSession(this);
+        if (_session == null)
+            throw new IllegalStateException("Create session failed");
+        
         HttpCookie cookie = _sessionHandler.getSessionCookie(_session, getContextPath(), isSecure());
         if (cookie != null)
             _channel.getResponse().replaceCookie(cookie);
